@@ -3,7 +3,7 @@
 		<div class="search_input">
 			<div class="search_input_wrapper">
 				<i class="iconfont icon-sousuo"></i>
-				<input type="text" />
+				<input type="text" v-model="message" />
 			</div>
 		</div>
 		<div class="search_result">
@@ -35,6 +35,61 @@
 <script>
 export default {
 	name: 'Search',
+	data() {
+		return {
+			message: '',
+			movieList: [],
+		}
+	},
+	watch: {
+		// 监听双向绑定的message搜索输入信息
+		message(newValue, oldValue) {
+			// 方法一：   可以使用 clearTimeout()   setTimeout()  截取，设置一定时常请求一次
+			// 通过设置延时定时器阻止多次触发（简单方法）
+			// clearTimeout()
+			// setTimeout()
+			// 方法二：通过axios自带的防抖方法
+			var that = this
+			// 取消上一次请求
+			this.cancelRequest()
+			this.axios
+				.get(this.baseUrl + '/cityList', {
+					cancelToken: new this.axios.CancelToken(function(c) {
+						that.source = c
+					}),
+				})
+				.then((res) => {
+					console.log(res)
+				})
+				.catch((err) => {
+					if (this.axios.isCancel(err)) {
+						console.log('Rquest canceled', err.message) //请求如果被取消，这里是返回取消的message
+					} else {
+						//handle error
+						console.log(err)
+					}
+				})
+		},
+	},
+	methods: {
+		cancelRequest() {
+			if (typeof this.source === 'function') {
+				this.source('终止请求')
+				/**
+                 * this.source<=>
+                 * ƒ cancel(message) {
+                        if (token.reason) {
+                        // Cancellation has already been requested
+                        return;
+                        }
+
+                        token.reason = new Cancel(message);
+                        resolvePromise(token.reason);
+                    }
+                 */
+			}
+		},
+	},
 }
 </script>
 
