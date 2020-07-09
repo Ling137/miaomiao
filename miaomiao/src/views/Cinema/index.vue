@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="main">
 		<!-- Hello Cinema -->
 		<Header title="喵喵影院" />
 		<div id="content">
