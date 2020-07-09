@@ -1,58 +1,50 @@
 <template>
 	<div class="city_body">
-		<!-- <div class="city_list">
-			<div class="city_hot">
-				<h2>热门城市</h2>
-				<ul class="clearfix">
-					<li>上海</li>
-					<li>北京</li>
-				
-				</ul>
-			</div>
-			<div class="city_sort">
+		<div class="city_list">
+			<Loading v-if="isLoading" />
+			<Scroller v-else ref="city_list">
 				<div>
-					<h2>A</h2>
-					<ul>
-						<li>阿拉善盟</li>
-						<li>鞍山</li>
-						<li>安庆</li>
-						<li>安阳</li>
-					</ul>
+					<div class="city_hot">
+						<h2>热门城市</h2>
+						<ul class="clearfix">
+							<li
+								v-for="item in hotList"
+								:key="item.id"
+								@tap="handleToCity(item.citysName, item.id)"
+							>
+								{{ item.citysName }}
+							</li>
+						</ul>
+					</div>
+					<div class="city_sort" ref="city_sort">
+						<div v-for="item in cityList" :key="item.id">
+							<h2>{{ item.index }}</h2>
+							<ul>
+								<li
+									v-for="itemlist in item.list"
+									:key="itemlist.id"
+									@tap="
+										handleToCity(itemlist.name, itemlist.id)
+									"
+								>
+									{{ itemlist.name }}
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
-				
-				
-			</div> 
+			</Scroller>
 		</div>
+
 		<div class="city_index">
 			<ul>
-				<li>A</li>
-				<li>B</li>
-				<li>C</li>
-				<li>D</li>
-				<li>E</li>
-			</ul>
-		</div>-->
-		<div class="city_list">
-			<div class="city_hot">
-				<h2>热门城市</h2>
-				<ul class="clearfix">
-					<li v-for="item in hotList" :key="item.id">
-						{{ item.citysName }}
-					</li>
-				</ul>
-			</div>
-            <div class="city_sort" ref="city_sort">
-				<div v-for="item in cityList" :key="item.id">
-					<h2>{{item.index}}</h2>
-					<ul>
-						<li v-for="itemlist in item.list" :key="itemlist.id">{{itemlist.name}}</li>
-					</ul>
-				</div>				
-			</div> 
-		</div>
-        <div class="city_index">
-			<ul>
-				<li v-for="(item,index) in cityList" :key="item.id" @touchstart="handleToIndex(index)">{{item.index}}</li>
+				<li
+					v-for="(item, index) in cityList"
+					:key="item.id"
+					@touchstart="handleToIndex(index)"
+				>
+					{{ item.index }}
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -66,24 +58,44 @@ export default {
 		return {
 			cityList: [],
 			hotList: [],
+			isLoading: true,
 		}
 	},
 	mounted() {
 		console.log('city mounted')
-
-		this.axios.get(this.baseUrl + '/cityList').then((res) => {
-			console.log(res)
-			if (res.status === 200) {
-				var data = res.data.provinces
-				var { cityList, hotList } = this.formatCityList(data)
-				console.log(cityList)
-				this.cityList = cityList //设置进data中
-				this.hotList = hotList //设置进data中
-			}
-		})
+		// setTimeout(() => {
+		// 	this.isLoading = false
+		// }, 1500)
+		var cityList = window.localStorage.getItem('cityList')
+		var hotList = window.localStorage.getItem('hotList')
+		if (cityList && hotList) {
+			this.cityList = JSON.parse(cityList) //设置进data中
+			this.hotList = JSON.parse(hotList)
+			this.isLoading = false
+		} else {
+			this.axios.get(this.baseUrl + '/cityList').then((res) => {
+				console.log(res)
+				if (res.status === 200) {
+					this.isLoading = false
+					var data = res.data.provinces
+					var { cityList, hotList } = this.formatCityList(data)
+					console.log(cityList)
+					this.cityList = cityList //设置进data中
+					this.hotList = hotList //设置进data中
+					window.localStorage.setItem(
+						'cityList',
+						JSON.stringify(cityList)
+					) //由于localStorage不能存储数组，所以需要转化为数组型字符串
+					window.localStorage.setItem(
+						'hotList',
+						JSON.stringify(hotList)
+					)
+				}
+			})
+		}
 	},
 	methods: {
-        // 处理城市列表cityList
+		// 处理城市列表cityList
 		formatCityList(data) {
 			var cityList = []
 			var hotList = []
@@ -163,13 +175,21 @@ export default {
 			// console.log(hotList)
 			// console.log(cityList)
 			return { cityList, hotList }
-        },
-        //点击索引进入对应值
-        handleToIndex(index){
-            var h2 = this.$refs.city_sort.getElementsByTagName("h2");
-            //parentNode就是父节点<div class="city_list">
-            this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop;
-        }
+		},
+		//点击索引进入对应值
+		handleToIndex(index) {
+			var h2 = this.$refs.city_sort.getElementsByTagName('h2')
+			//parentNode就是父节点<div class="city_list">
+			// this.$refs.city_sort.parentNode.scrollTop = h2[index].offsetTop//用better-scroll时原生的scrollTop就不管用了
+			//使用better-scroll中的方法
+			this.$refs.city_list.toScrollTop(-h2[index].offsetTop)
+		},
+		handleToCity(name, id) {
+			this.$store.commit('city/CITY_INFO', { name, id })
+			window.localStorage.setItem('nowNm', name)
+			window.localStorage.setItem('nowId', id)
+			this.$router.push('/movie/nowPlaying')
+		},
 	},
 }
 </script>

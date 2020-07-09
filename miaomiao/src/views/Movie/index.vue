@@ -5,16 +5,26 @@
 		<div id="content">
 			<div class="movie_menu">
 				<router-link tag="div" to="/movie/city" class="city_name">
-					<span>大连</span
+					<span>{{ $store.state.city.name }}</span
 					><i class="iconfont icon-lower-triangle"></i>
 				</router-link>
 				<div class="hot_swtich">
-					<router-link tag="div" to="/movie/nowPlaying" class="hot_item">正在热映</router-link>
-					<router-link tag="div" to="/movie/comingSoon" class="hot_item">即将上映</router-link>
+					<router-link
+						tag="div"
+						to="/movie/nowPlaying"
+						class="hot_item"
+						>正在热映</router-link
+					>
+					<router-link
+						tag="div"
+						to="/movie/comingSoon"
+						class="hot_item"
+						>即将上映</router-link
+					>
 				</div>
 				<router-link tag="div" to="/movie/search" class="search_entry">
 					<i class="iconfont icon-sousuo"></i>
-				</router-link >
+				</router-link>
 			</div>
 			<keep-alive>
 				<router-view />
@@ -27,12 +37,44 @@
 <script>
 import Header from '@/components/Header'
 import TabBar from '@/components/TabBar'
+import { messageBox } from '@/components/JS'
 
 export default {
 	name: 'Movie',
 	components: {
 		Header,
 		TabBar,
+	},
+	mounted() {
+		setTimeout(() => {
+			// this.axios.get('/api/getLocation').then((res) => {
+			// 	var msg = res.data.msg
+			// 	if (msg === 'ok') {
+			// 		var nm = res.data.data.nm
+			//         var id = res.data.data.id
+			var nm = '北京市'
+			var id = 635
+			if (this.$store.state.city.id == id) {
+				return
+			} //如果当前城市与定位城市id相同则不弹出弹窗
+			messageBox({
+				title: '定位',
+				content: nm,
+				cancel: '取消',
+				confirm: '重新定位',
+				// handleCancel() {
+				// 	console.log('取消')
+				// },
+				handleConfirm() {
+					console.log('定位')
+					window.localStorage.setItem('nowNm', nm)
+					window.localStorage.setItem('nowId', id)
+					window.location.reload()
+				},
+			})
+			// }
+			// })
+		}, 3000)
 	},
 }
 </script>

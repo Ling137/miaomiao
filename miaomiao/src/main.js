@@ -8,6 +8,13 @@ Vue.prototype.axios = axios;
 
 Vue.prototype.baseUrl = "https://mockapi.eolinker.com/6bSx7Afdb3d0356201003058ae87cfe77bab2f2c0898e8b";
 
+//将better-scroll封装为全局组件
+import Scroller from '@/components/Scroller'
+Vue.component('Scroller' , Scroller);
+
+//Loading全局组件
+import Loading from '@/components/Loading'
+Vue.component('Loading' , Loading);
 
 //全局过滤器
 Vue.filter('setWH',(url,arg)=>{
