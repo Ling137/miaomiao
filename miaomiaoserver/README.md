@@ -39,7 +39,7 @@ nodemailer模块
 
 - [官网](https://nodemailer.com/about)
 
-- 授权码：**gmia**  **ctmf**  **cxan**  **jeij**
+- 授权码：
 
 - 基本配置config.js
 

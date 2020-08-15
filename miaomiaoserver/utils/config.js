@@ -24,8 +24,8 @@ var Email = {
 		host: 'smtp.qq.com',
 		port: 587,
 		auth: {
-			user: '1375025651@qq.com', // generated ethereal user发件邮箱
-			pass: 'gmiactmfcxanjeij', // generated ethereal password邮箱smtp密钥
+			user: '', // generated ethereal user发件邮箱
+			pass: '', // generated ethereal password邮箱smtp密钥
 		},
 	},
 	get transporter() {
