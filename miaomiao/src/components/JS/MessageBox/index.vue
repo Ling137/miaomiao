@@ -3,8 +3,8 @@
 		<h2>{{ title }}</h2>
 		<p>{{ content }}</p>
 		<div>
-			<div @touchstart="handleCancel">{{ cancel }}</div>
-			<div @touchstart="handleConfirm">{{ confirm }}</div>
+			<div v-if="cancel" @touchstart="handleCancel">{{ cancel }}</div>
+			<div v-if="confirm" @touchstart="handleConfirm">{{ confirm }}</div>
 		</div>
 	</div>
 </template>

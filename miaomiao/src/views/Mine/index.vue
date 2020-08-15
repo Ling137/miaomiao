@@ -1,13 +1,13 @@
 <template>
-  <div>
-      <!-- Hello Mine -->
-        <Header title="我的电影" />
-<div id="content">
-<Login />
-</div>
-        <TabBar />
-
-  </div>
+	<div>
+		<!-- Hello Mine -->
+		<Header title="我的电影" />
+		<div id="content">
+			<!-- <Login /> -->
+            <router-view />
+		</div>
+		<TabBar />
+	</div>
 </template>
 
 <script>
@@ -16,15 +16,17 @@ import TabBar from '@/components/TabBar'
 import Login from '@/components/Login'
 
 export default {
-name:'Mine',
-components: {
+	name: 'Mine',
+	components: {
 		Header,
-        TabBar,
-        Login,
+		TabBar,
+		Login,
 	},
 }
 </script>
 
 <style scoped>
-#content .login_body{  width:100%;}
+#content .login_body {
+	width: 100%;
+}
 </style>

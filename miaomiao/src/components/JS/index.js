@@ -2,17 +2,29 @@ import Vue from 'vue'
 import MessageBox from './MessageBox'
 
 export var messageBox = (function() {
-	var defaults = {
-		//默认值
-		title: '',
-		content: '',
-		cancel: '',
-		confirm: '',
-		handleCancel: null,
-		handleConfirm: null,
-    }
-    var MyComponent = Vue.extend(MessageBox)
+    // 外部属于共享区域，对每一个messageBox是共享的，可能会出bug
+	// var defaults = {
+	// 	//默认值
+	// 	title: '',
+	// 	content: '',
+	// 	cancel: '',
+	// 	confirm: '',
+	// 	handleCancel: null,
+	// 	handleConfirm: null,
+    // }
+    // var MyComponent = Vue.extend(MessageBox)
 	return function(opts) {
+        //放在return中对于每一个messageBox是独立的
+        var defaults = {
+            //默认值
+            title: '',
+            content: '',
+            cancel: '',
+            confirm: '',
+            handleCancel: null,
+            handleConfirm: null,
+        }
+        var MyComponent = Vue.extend(MessageBox)
 		//配置参数
 		for (var attr in opts) {
 			defaults[attr] = opts[attr]
@@ -26,15 +38,16 @@ export var messageBox = (function() {
 				cancel: defaults.cancel,
 				confirm: defaults.confirm,
 			},
-			methods: {
+			methods: {  
 				handleCancel() {
 					defaults.handleCancel && defaults.handleCancel.call(this)
 					document.body.removeChild(vm.$el) //删除弹窗
-				},
-				handleConfirm() {
+                },
+                handleConfirm() {
 					defaults.handleConfirm && defaults.handleConfirm.call(this) //改变this指向问题
 					document.body.removeChild(vm.$el) //删除弹窗
 				},
+				
 			},
 		})
 		document.body.appendChild(vm.$el)
