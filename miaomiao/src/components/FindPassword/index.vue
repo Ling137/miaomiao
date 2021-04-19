@@ -19,7 +19,7 @@
 		</div>
 		<div><span>验证码：</span><input v-model="verify" type="text" /></div>
 		<div>
-			<button class="passwordBtn" @touchstart="">
+			<button class="passwordBtn" @touchstart="change">
 				修改
 			</button>
 		</div>
