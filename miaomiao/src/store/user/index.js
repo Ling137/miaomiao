@@ -1,10 +1,10 @@
 const state = {
 	name: '',
-	// headImg:''
 }
 const mutations = {
-    // 状态管理中的方法名称最好使用大写
+	// 状态管理中的方法名称最好使用大写
 	USER_NAME(state, payload) {
+		console.log('state==>', state, 'payload==>', payload)
 		state.name = payload.name
 	},
 }

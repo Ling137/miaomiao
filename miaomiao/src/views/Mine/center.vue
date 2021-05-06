@@ -33,10 +33,10 @@ export default {
 				.then((res) => {
 					console.log(res.data)
 					let status = res.data.status
-                    var This = this
-                    this.$store.commit('user/USER_NAME',{
-                        name:''
-                    })
+					var This = this
+					this.$store.commit('user/USER_NAME', {
+						name: '',
+					})
 					This.$router.push('/mine/login')
 				})
 				.catch((err) => {
@@ -51,13 +51,13 @@ export default {
 			console.log('获取用户信息：', res.data)
 			var status = res.data.status
 			if (status === 0) {
-                // 由于路由跳转前的守卫不能读取this,所以this.name = res.data.data.username不可用
-                // 可以通过next(vm=>{})的方式进行获取数据内容
-				next(vm=>{
-                    vm.$store.commit('user/USER_NAME',{
-                        name:res.data.data.username
-                    })
-                })
+				// 由于路由跳转前的守卫不能读取this,所以this.name = res.data.data.username不可用
+				// 可以通过next(vm=>{})的方式进行获取数据内容
+				next((vm) => {
+					vm.$store.commit('user/USER_NAME', {
+						name: res.data.data.username,
+					})
+				})
 			} else {
 				next('/mine/login')
 			}
